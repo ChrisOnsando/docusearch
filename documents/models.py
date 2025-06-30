@@ -5,7 +5,7 @@ class Document(models.Model):
     file = models.FileField(upload_to='documents/')
     text_content = models.TextField(blank=True)
     uploaded_at = models.DateTimeField(auto_now_add=True)
-    uploader_email = models.EmailField()  # from Firebase token
+    uploader_email = models.EmailField()
 
     def __str__(self):
         return self.title
