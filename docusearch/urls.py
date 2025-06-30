@@ -16,9 +16,10 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from documents.views import profile_view  
+from documents.views import profile_view, upload_document  
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/profile/', profile_view),
+     path('api/upload/', upload_document),
 ]
