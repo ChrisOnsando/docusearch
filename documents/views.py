@@ -3,6 +3,7 @@ from rest_framework.response import Response
 from .models import Document
 from rest_framework.parsers import MultiPartParser
 import textract
+from django.db.models import Q
 
 @api_view(['GET'])
 def profile_view(request):
@@ -46,3 +47,34 @@ def upload_document(request):
     )
 
     return Response({"message": "Document Uploaded!", "doc_id": doc.id})
+
+@api_view(['GET'])
+def search_documents(request):
+    user = getattr(request, 'user_info', None)
+    if not user:
+        return Response({"error": "Unauthorized"}, status=401)
+
+    query = request.GET.get('q', '')
+    if not query:
+        return Response({"error": "Search query missing"}, status=400)
+
+    docs = Document.objects.filter(
+        Q(text_content__icontains=query),
+        uploader_email=user['email']
+    )
+
+    results = []
+    for doc in docs:
+        snippet_start = doc.text_content.lower().find(query.lower())
+        snippet = (
+            doc.text_content[snippet_start:snippet_start+200]
+            if snippet_start != -1 else ''
+        )
+        results.append({
+            "id": doc.id,
+            "title": doc.title,
+            "match_snippet": snippet,
+            "uploaded_at": doc.uploaded_at
+        })
+
+    return Response(results)
