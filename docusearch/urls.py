@@ -16,10 +16,11 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from documents.views import profile_view, upload_document  
+from documents.views import profile_view, upload_document, search_documents  
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/profile/', profile_view),
-     path('api/upload/', upload_document),
+    path('api/upload/', upload_document),
+    path('api/search/', search_documents),
 ]
