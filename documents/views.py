@@ -78,3 +78,4 @@ def search_documents(request):
         })
 
     return Response(results)
+
